@@ -22,7 +22,7 @@ jobs:
             exit 1
           fi
           echo "LIFECYCLE_VERSION=$version" >> $GITHUB_ENV
-      - name: Determine download urls for linux and windows
+      - name: Determine download urls for linux, linux-arm64 and windows
         id: artifact-urls
         uses: actions/github-script@v3.0.0
         with:
@@ -75,6 +75,9 @@ jobs:
                   if (tuple[0].includes("linux")) {
                     urlMap.set("linux", tuple[1])
                   }
+                  if (tuple[0].includes("linux-arm64")) {
+                    urlMap.set("linux-arm64", tuple[1])
+                  }
                   if (tuple[0].includes("windows")) {
                     urlMap.set("windows", tuple[1])
                   }
@@ -82,8 +85,8 @@ jobs:
                 if (urlMap.size === 0) {
                   throw "no artifacts found"
                 }
-                if (urlMap.size != 2) {
-                  throw "there should be exactly two artifacts"
+                if (urlMap.size != 3) {
+                  throw "there should be exactly three artifacts"
                 }
                 return Object.fromEntries(urlMap.entries())
               })
@@ -96,6 +99,16 @@ jobs:
           mkdir artifact-linux
           unzip -d artifact-linux artifact-linux.zip
           lifecycle_path=$(ls artifact-linux/lifecycle-*linux.x86-64.tgz)
+          echo "ARTIFACT_LINUX_PATH=$PWD/$lifecycle_path" >> $GITHUB_ENV
+      - name: Download linux-arm64 artifact
+        run: |
+          url=$(echo '${{ steps.artifact-urls.outputs.result }}' | jq -r .linux-arm64 )
+          curl -sL -w 'RESP_CODE:%{response_code}\n' \
+            --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            -o artifact-linux-arm64.zip $url
+          mkdir artifact-linux-arm64
+          unzip -d artifact-linux-arm64 artifact-linux-arm64.zip
+          lifecycle_path=$(ls artifact-linux-arm64/lifecycle-*linux.arm64.tgz)
           echo "ARTIFACT_LINUX_PATH=$PWD/$lifecycle_path" >> $GITHUB_ENV
       - name: Download windows artifact
         run: |
