@@ -72,7 +72,7 @@ jobs:
                   .map(artifact => [artifact.name, artifact.archive_download_url]);
                 let urlMap = new Map();
                 tuples.forEach(function(tuple) {
-                  if (tuple[0].includes("linux")) {
+                  if (tuple[0].includes("linux-x86-64")) {
                     urlMap.set("linux", tuple[1])
                   }
                   if (tuple[0].includes("linux-arm64")) {
