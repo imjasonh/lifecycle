@@ -129,8 +129,8 @@ jobs:
       - uses: azure/docker-login@v1
         if: github.event_name == 'push'
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+         username: nonce
+         password: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/download-artifact@v2
         with:
           name: tag
@@ -142,14 +142,14 @@ jobs:
         run: |
           LIFECYCLE_IMAGE_TAG=$(git describe --always)
           DOCKER_CLI_EXPERIMENTAL=enabled
-          go run ./tools/image/main.go -lifecyclePath ./out/lifecycle-v*+linux.x86-64.tgz -tag buildpacksio/lifecycle:${LIFECYCLE_IMAGE_TAG}-linux
-          go run ./tools/image/main.go -lifecyclePath ./out/lifecycle-v*+linux.arm64.tgz -tag buildpacksio/lifecycle:${LIFECYCLE_IMAGE_TAG}-linux-arm64 -arch arm64
-          go run ./tools/image/main.go -lifecyclePath ./out/lifecycle-v*+windows.x86-64.tgz -tag buildpacksio/lifecycle:${LIFECYCLE_IMAGE_TAG}-windows -os windows
-          docker manifest create buildpacksio/lifecycle:${LIFECYCLE_IMAGE_TAG} \
-              buildpacksio/lifecycle:${LIFECYCLE_IMAGE_TAG}-linux \
-              buildpacksio/lifecycle:${LIFECYCLE_IMAGE_TAG}-linux-arm64 \
-              buildpacksio/lifecycle:${LIFECYCLE_IMAGE_TAG}-windows
-          docker manifest push buildpacksio/lifecycle:${LIFECYCLE_IMAGE_TAG}
+          go run ./tools/image/main.go -lifecyclePath ./out/lifecycle-v*+linux.x86-64.tgz -tag ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}-linux
+          go run ./tools/image/main.go -lifecyclePath ./out/lifecycle-v*+linux.arm64.tgz -tag ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}-linux-arm64 -arch arm64
+          go run ./tools/image/main.go -lifecyclePath ./out/lifecycle-v*+windows.x86-64.tgz -tag ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}-windows -os windows
+          docker manifest create ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG} \
+              ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}-linux \
+              ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}-linux-arm64 \
+              ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}-windows
+          docker manifest push ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}
   pack-acceptance-linux:
     if: github.event_name == 'push'
     needs: build-and-publish
@@ -180,7 +180,7 @@ jobs:
           cd pack
           git checkout $(git describe --abbrev=0 --tags) # check out the latest tag
           LIFECYCLE_PATH="../lifecycle-v${{ env.LIFECYCLE_VERSION }}+linux.x86-64.tgz" \
-          LIFECYCLE_IMAGE="buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}" \
+          LIFECYCLE_IMAGE="ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}" \
           make acceptance
   pack-acceptance-windows:
     if: github.event_name == 'push'
@@ -242,5 +242,5 @@ jobs:
           cd pack
           git checkout $(git describe --abbrev=0 --tags) # check out the latest tag
           $env:LIFECYCLE_PATH="..\lifecycle-v${{ env.LIFECYCLE_VERSION }}+windows.x86-64.tgz"
-          $env:LIFECYCLE_IMAGE="buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}"
+          $env:LIFECYCLE_IMAGE="ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}"
           make acceptance
