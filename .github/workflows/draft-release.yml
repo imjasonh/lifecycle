@@ -103,7 +103,7 @@ jobs:
       - name: Download linux-arm64 artifact
         run: |
           echo '${{ steps.artifact-urls.outputs.result }}' | jq
-          url=$(echo '${{ steps.artifact-urls.outputs.result }}' | jq -r '.linux-arm64' )
+          url=$(echo '${{ steps.artifact-urls.outputs.result }}' | jq -r '."linux-arm64"' )
           curl -sL -w 'RESP_CODE:%{response_code}\n' \
             --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             -o artifact-linux-arm64.zip $url
