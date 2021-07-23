@@ -12,69 +12,69 @@ jobs:
       - uses: actions/checkout@v2
       - uses: azure/docker-login@v1
         with:
-         username: ${{ secrets.DOCKER_USERNAME }}
-         password: ${{ secrets.DOCKER_PASSWORD }}
+         username: nonce
+         password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set env
         run: |
           echo "LIFECYCLE_VERSION=$(echo ${{ github.event.release.tag_name }} | cut -d "v" -f2)" >> $GITHUB_ENV
           echo "LIFECYCLE_IMAGE_TAG=$(git describe --always)" >> $GITHUB_ENV
       - name: Retag lifecycle images - semver
         run: |
-          docker pull buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux
-          docker image tag buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux
-          docker push buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux
+          docker pull ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux
+          docker image tag ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux
+          docker push ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux
       - name: Retag lifecycle images - latest
         if: "!contains(env.LIFECYCLE_VERSION, 'rc')"
         run: |
-          docker pull buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux
-          docker image tag buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux buildpacksio/lifecycle:latest-linux
-          docker push buildpacksio/lifecycle:latest-linux
+          docker pull ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux
+          docker image tag ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux ghcr.io/imjasonh/lifecycle:latest-linux
+          docker push ghcr.io/imjasonh/lifecycle:latest-linux
   retag-lifecycle-images-linux-arm64:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: azure/docker-login@v1
         with:
-         username: ${{ secrets.DOCKER_USERNAME }}
-         password: ${{ secrets.DOCKER_PASSWORD }}
+         username: nonce
+         password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set env
         run: |
           echo "LIFECYCLE_VERSION=$(echo ${{ github.event.release.tag_name }} | cut -d "v" -f2)" >> $GITHUB_ENV
           echo "LIFECYCLE_IMAGE_TAG=$(git describe --always)" >> $GITHUB_ENV
       - name: Retag lifecycle images - semver
         run: |
-          docker pull buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux-arm64
-          docker image tag buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux-arm64 buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux-arm64
-          docker push buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux-arm64
+          docker pull ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux-arm64
+          docker image tag ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux-arm64 ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux-arm64
+          docker push ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux-arm64
       - name: Retag lifecycle images - latest
         if: "!contains(env.LIFECYCLE_VERSION, 'rc')"
         run: |
-          docker pull buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux-arm64
-          docker image tag buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux-arm64 buildpacksio/lifecycle:latest-linux-arm64
-          docker push buildpacksio/lifecycle:latest-linux-arm64
+          docker pull ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux-arm64
+          docker image tag ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-linux-arm64 ghcr.io/imjasonh/lifecycle:latest-linux-arm64
+          docker push ghcr.io/imjasonh/lifecycle:latest-linux-arm64
   retag-lifecycle-images-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - uses: azure/docker-login@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+         username: nonce
+         password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set env
         run: |
           echo "LIFECYCLE_VERSION=$(echo ${{ github.event.release.tag_name }} | cut -d "v" -f2)" >> $env:GITHUB_ENV
           echo "LIFECYCLE_IMAGE_TAG=$(git describe --always)" >> $env:GITHUB_ENV
       - name: Retag lifecycle images - semver
         run: |
-          docker pull buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-windows
-          docker image tag buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-windows buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}-windows
-          docker push buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}-windows
+          docker pull ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-windows
+          docker image tag ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-windows ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}-windows
+          docker push ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}-windows
       - name: Retag lifecycle images - latest
         if: "!contains(env.LIFECYCLE_VERSION, 'rc')"
         run: |
-          docker pull buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-windows
-          docker image tag buildpacksio/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-windows buildpacksio/lifecycle:latest-windows
-          docker push buildpacksio/lifecycle:latest-windows
+          docker pull ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-windows
+          docker image tag ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}-windows ghcr.io/imjasonh/lifecycle:latest-windows
+          docker push ghcr.io/imjasonh/lifecycle:latest-windows
   create-manifest-lists:
     runs-on: ubuntu-latest
     needs:
@@ -84,25 +84,25 @@ jobs:
     steps:
       - uses: azure/docker-login@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+         username: nonce
+         password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set env
         run: |
           echo "LIFECYCLE_VERSION=$(echo ${{ github.event.release.tag_name }} | cut -d "v" -f2)" >> $GITHUB_ENV
       - name: Create lifecycle image manifest lists - semver
         run: |
           DOCKER_CLI_EXPERIMENTAL=enabled
-          docker manifest create buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }} \
-              buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux \
-              buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux-arm64 \
-              buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}-windows
-          docker manifest push buildpacksio/lifecycle:${{ env.LIFECYCLE_VERSION }}
+          docker manifest create ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }} \
+              ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux \
+              ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}-linux-arm64 \
+              ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}-windows
+          docker manifest push ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}
       - name: Create lifecycle image manifest lists - latest
         if: "!contains(env.LIFECYCLE_VERSION, 'rc')"
         run: |
           DOCKER_CLI_EXPERIMENTAL=enabled
-          docker manifest create buildpacksio/lifecycle:latest \
-              buildpacksio/lifecycle:latest-linux \
-              buildpacksio/lifecycle:latest-linux-arm64 \
-              buildpacksio/lifecycle:latest-windows
-          docker manifest push buildpacksio/lifecycle:latest
+          docker manifest create ghcr.io/imjasonh/lifecycle:latest \
+              ghcr.io/imjasonh/lifecycle:latest-linux \
+              ghcr.io/imjasonh/lifecycle:latest-linux-arm64 \
+              ghcr.io/imjasonh/lifecycle:latest-windows
+          docker manifest push ghcr.io/imjasonh/lifecycle:latest
