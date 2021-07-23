@@ -102,6 +102,7 @@ jobs:
           echo "ARTIFACT_LINUX_PATH=$PWD/$lifecycle_path" >> $GITHUB_ENV
       - name: Download linux-arm64 artifact
         run: |
+          echo '${{ steps.artifact-urls.outputs.result }}' | jq
           url=$(echo '${{ steps.artifact-urls.outputs.result }}' | jq -r .linux-arm64 )
           curl -sL -w 'RESP_CODE:%{response_code}\n' \
             --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
@@ -109,7 +110,7 @@ jobs:
           mkdir artifact-linux-arm64
           unzip -d artifact-linux-arm64 artifact-linux-arm64.zip
           lifecycle_path=$(ls artifact-linux-arm64/lifecycle-*linux.arm64.tgz)
-          echo "ARTIFACT_LINUX_PATH=$PWD/$lifecycle_path" >> $GITHUB_ENV
+          echo "ARTIFACT_LINUX_ARM64_PATH=$PWD/$lifecycle_path" >> $GITHUB_ENV
       - name: Download windows artifact
         run: |
           url=$(echo '${{ steps.artifact-urls.outputs.result }}' | jq -r .windows )
@@ -151,7 +152,9 @@ jobs:
         if: contains(env.LIFECYCLE_VERSION, 'rc') # e.g., 0.99.0-rc.1
         run: |
           gh release create v${{ env.LIFECYCLE_VERSION }} \
-            ${{ env.ARTIFACT_LINUX_PATH }} ${{ env.ARTIFACT_WINDOWS_PATH }} \
+            ${{ env.ARTIFACT_LINUX_PATH }} \
+            ${{ env.ARTIFACT_LINUX_ARM64_PATH }} \
+            ${{ env.ARTIFACT_WINDOWS_PATH }} \
             --draft \
             --notes-file body.txt \
             --prerelease \
@@ -163,7 +166,9 @@ jobs:
         if: "!contains(env.LIFECYCLE_VERSION, 'rc')"
         run: |
           gh release create v${{ env.LIFECYCLE_VERSION }} \
-            ${{ env.ARTIFACT_LINUX_PATH }} ${{ env.ARTIFACT_WINDOWS_PATH }} \
+            ${{ env.ARTIFACT_LINUX_PATH }} \
+            ${{ env.ARTIFACT_LINUX_ARM64_PATH }} \
+            ${{ env.ARTIFACT_WINDOWS_PATH }} \
             --draft \
             --notes-file body.txt \
             --target $GITHUB_REF \
