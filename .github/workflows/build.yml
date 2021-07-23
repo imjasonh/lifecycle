@@ -152,7 +152,7 @@ jobs:
               ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}-windows
           docker manifest push ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}
   pack-acceptance-linux:
-    if: github.event_name == 'push'
+    if: github.event_name == 'XXX' # disable for now 
     needs: build-and-publish
     runs-on: ubuntu-latest
     steps:
@@ -184,7 +184,7 @@ jobs:
           LIFECYCLE_IMAGE="ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_IMAGE_TAG }}" \
           make acceptance
   pack-acceptance-windows:
-    if: github.event_name == 'push'
+    if: github.event_name == 'XXX' # disable for now
     needs: build-and-publish
     runs-on: windows-latest
     steps:
