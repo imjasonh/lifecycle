@@ -181,8 +181,9 @@ jobs:
           MANIFEST_SHA=$(docker manifest push ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG})
           echo "MANIFEST_SHA: $MANIFEST_SHA"
 
-          COSIGN_PASSWORD=${{ secrets.COSIGN_PASSWORD }} cosign sign -key <(echo -n "${{ secrets.COSIGN_PRIVATE_KEY }}" | base64 --decode) -a tag=${LIFECYCLE_IMAGE_TAG} -r ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}@${MANIFEST_SHA}
-          cosign verify -key cosign.pub -a tag=${LIFECYCLE_IMAGE_TAG} ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}
+          # TODO remove
+          #COSIGN_PASSWORD=${{ secrets.COSIGN_PASSWORD }} cosign sign -key <(echo -n "${{ secrets.COSIGN_PRIVATE_KEY }}" | base64 --decode) -a tag=${LIFECYCLE_IMAGE_TAG} -r ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}@${MANIFEST_SHA}
+          #cosign verify -key cosign.pub -a tag=${LIFECYCLE_IMAGE_TAG} ghcr.io/imjasonh/lifecycle:${LIFECYCLE_IMAGE_TAG}
   pack-acceptance-linux:
     if: false
     needs: build-and-publish
