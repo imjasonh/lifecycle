@@ -63,8 +63,9 @@ jobs:
           MANIFEST_SHA=$(docker manifest push ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }})
           echo "MANIFEST_SHA: $MANIFEST_SHA"
 
-          COSIGN_PASSWORD=${{ secrets.COSIGN_PASSWORD }} cosign sign -key <(echo -n "${{ secrets.COSIGN_PRIVATE_KEY }}" | base64 --decode) -a tag=${{ env.LIFECYCLE_VERSION }} -r ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}@${MANIFEST_SHA}
-          cosign verify -key cosign.pub -a tag=${{ env.LIFECYCLE_VERSION }} ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}
+          # TODO remove
+          #COSIGN_PASSWORD=${{ secrets.COSIGN_PASSWORD }} cosign sign -key <(echo -n "${{ secrets.COSIGN_PRIVATE_KEY }}" | base64 --decode) -a tag=${{ env.LIFECYCLE_VERSION }} -r ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}@${MANIFEST_SHA}
+          #cosign verify -key cosign.pub -a tag=${{ env.LIFECYCLE_VERSION }} ghcr.io/imjasonh/lifecycle:${{ env.LIFECYCLE_VERSION }}
       - name: Retag lifecycle images & create manifest list - latest
         if: "!contains(env.LIFECYCLE_VERSION, 'rc')"
         run: |
@@ -87,5 +88,6 @@ jobs:
           MANIFEST_SHA=$(docker manifest push ghcr.io/imjasonh/lifecycle:latest)
           echo "MANIFEST_SHA: $MANIFEST_SHA"
 
-          COSIGN_PASSWORD=${{ secrets.COSIGN_PASSWORD }} cosign sign -key <(echo -n "${{ secrets.COSIGN_PRIVATE_KEY }}" | base64 --decode) -a tag=latest -r ghcr.io/imjasonh/lifecycle:latest@${MANIFEST_SHA}
-          cosign verify -key cosign.pub -a tag=latest ghcr.io/imjasonh/lifecycle:latest
+          # TODO remove
+          #COSIGN_PASSWORD=${{ secrets.COSIGN_PASSWORD }} cosign sign -key <(echo -n "${{ secrets.COSIGN_PRIVATE_KEY }}" | base64 --decode) -a tag=latest -r ghcr.io/imjasonh/lifecycle:latest@${MANIFEST_SHA}
+          #cosign verify -key cosign.pub -a tag=latest ghcr.io/imjasonh/lifecycle:latest
