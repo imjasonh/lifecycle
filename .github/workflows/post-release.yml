@@ -22,6 +22,7 @@ jobs:
           go install github.com/sigstore/cosign/cmd/cosign@latest
       - uses: azure/docker-login@v1
         with:
+          login-server: ghcr.io
           username: username
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set env
