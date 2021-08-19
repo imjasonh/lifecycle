@@ -86,7 +86,7 @@ jobs:
   build-and-publish:
     needs:
       - test-linux
-      - test-windows
+      # - test-windows TODO remove
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
