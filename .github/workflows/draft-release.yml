@@ -114,7 +114,7 @@ jobs:
           mkdir artifact-linux-x86-64
           unzip -d artifact-linux-x86-64 artifact-linux-x86-64.zip
           lifecycle_path=$(ls artifact-linux-x86-64/lifecycle-*linux.x86-64.tgz)
-          echo "ARTIFACT_LINUX_X86_64_PATH=$PWD/$lifecycle_path" >> $GITHUB_ENV
+          echo "ARTIFACT_LINUX_AMD64_PATH=$PWD/$lifecycle_path" >> $GITHUB_ENV
       - name: Download linux-x86-64-sha256 artifact
         run: |
           url=$(echo '${{ steps.artifact-urls.outputs.result }}' | jq -r .linux_x86_64_sha256 )
@@ -124,7 +124,7 @@ jobs:
           mkdir artifact-linux-x86-64-sha256
           unzip -d artifact-linux-x86-64-sha256 artifact-linux-x86-64-sha256.zip
           lifecycle_path=$(ls artifact-linux-x86-64-sha256/lifecycle-*linux.x86-64.tgz.sha256)
-          echo "ARTIFACT_LINUX_X86_64_SHA_PATH=$PWD/$lifecycle_path" >> $GITHUB_ENV
+          echo "ARTIFACT_LINUX_AMD64_SHA_PATH=$PWD/$lifecycle_path" >> $GITHUB_ENV
       - name: Download linux-arm64 artifact
         run: |
           url=$(echo '${{ steps.artifact-urls.outputs.result }}' | jq -r .linux_arm64 )
@@ -206,7 +206,7 @@ jobs:
         if: contains(env.LIFECYCLE_VERSION, 'rc') # e.g., 0.99.0-rc.1
         run: |
           gh release create v${{ env.LIFECYCLE_VERSION }} \
-            ${{ env.ARTIFACT_LINUX_X86_64_PATH }} ${{ env.ARTIFACT_LINUX_X86_64_SHA_PATH }} \
+            ${{ env.ARTIFACT_LINUX_AMD64_PATH }} ${{ env.ARTIFACT_LINUX_AMD64_SHA_PATH }} \
             ${{ env.ARTIFACT_LINUX_ARM64_PATH }} ${{ env.ARTIFACT_LINUX_ARM64_SHA_PATH }} \
             ${{ env.ARTIFACT_WINDOWS_PATH }} ${{ env.ARTIFACT_WINDOWS_SHA_PATH }} \
             ${{ env.ARTIFACT_COSIGN_PATH }} \
@@ -221,7 +221,7 @@ jobs:
         if: "!contains(env.LIFECYCLE_VERSION, 'rc')"
         run: |
           gh release create v${{ env.LIFECYCLE_VERSION }} \
-            ${{ env.ARTIFACT_LINUX_X86_64_PATH }} ${{ env.ARTIFACT_LINUX_X86_64_SHA_PATH }} \
+            ${{ env.ARTIFACT_LINUX_AMD64_PATH }} ${{ env.ARTIFACT_LINUX_AMD64_SHA_PATH }} \
             ${{ env.ARTIFACT_LINUX_ARM64_PATH }} ${{ env.ARTIFACT_LINUX_ARM64_SHA_PATH }} \
             ${{ env.ARTIFACT_WINDOWS_PATH }} ${{ env.ARTIFACT_WINDOWS_SHA_PATH }} \
             ${{ env.ARTIFACT_COSIGN_PATH }} \
